@@ -23,42 +23,44 @@ void __cheri_compartment("lcd_test") lcd_test()
 	auto lcd    = SonataLcd(sonata::lcd::internal::LCD_Rotate90);
 	auto screen = Rect::from_point_and_size(Point::ORIGIN, lcd.resolution());
 
+	lcd.clean(Color::Black);
+
 	// Draw the lowRISC logo to the LCD
 	auto logoRect = screen.centered_subrect({105, 80});
 	lcd.draw_image_rgb565(logoRect, lowriscLogo105x80);
 
-	// Make a version of the cherry bitmap with a white background.
-	uint8_t cherryImage10x10WhiteBg[200];
-	for (uint32_t i = 0; i < 200; i += 2)
-	{
-		if (cherryImage10x10[i] == 0x00 && cherryImage10x10[i + 1] == 0x00)
-		{
-			cherryImage10x10WhiteBg[i]     = 0xFF;
-			cherryImage10x10WhiteBg[i + 1] = 0xFF;
-		}
-		else
-		{
-			cherryImage10x10WhiteBg[i]     = cherryImage10x10[i];
-			cherryImage10x10WhiteBg[i + 1] = cherryImage10x10[i + 1];
-		}
-	}
-	const uint8_t *img = static_cast<const uint8_t *>(cherryImage10x10WhiteBg);
+	// // Make a version of the cherry bitmap with a white background.
+	// uint8_t cherryImage10x10WhiteBg[200];
+	// for (uint32_t i = 0; i < 200; i += 2)
+	// {
+	// 	if (cherryImage10x10[i] == 0x00 && cherryImage10x10[i + 1] == 0x00)
+	// 	{
+	// 		cherryImage10x10WhiteBg[i]     = 0xFF;
+	// 		cherryImage10x10WhiteBg[i + 1] = 0xFF;
+	// 	}
+	// 	else
+	// 	{
+	// 		cherryImage10x10WhiteBg[i]     = cherryImage10x10[i];
+	// 		cherryImage10x10WhiteBg[i + 1] = cherryImage10x10[i + 1];
+	// 	}
+	// }
+	const uint8_t *img = static_cast<const uint8_t *>(cherryImage10x10);
 
 	// Draw the messages & cherry image to the LCD
 	lcd.draw_str(TopMessagePos,
 	             "Running on",
-	             Color::White,
 	             Color::Black,
+	             Color::White,
 	             Font::LucidaConsole_10pt);
 	lcd.draw_str(Point::offset(TopMessagePos, TopMessageOffset),
 	             "Sonata XL!",
-	             Color::White,
 	             Color::Black,
+	             Color::White,
 	             Font::LucidaConsole_10pt);
 	lcd.draw_str(BottomMessagePos,
 	             "Protected by CHERI",
-	             Color::White,
 	             Color::Black,
+	             Color::White,
 	             Font::M3x6_16pt);
 	Point imgPos = Point::offset(BottomMessagePos, BottomMessageOffset);
 	lcd.draw_image_rgb565(Rect::from_point_and_size(imgPos, {10, 10}), img);
