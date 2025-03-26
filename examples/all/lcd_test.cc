@@ -6,7 +6,7 @@
 
 #include "../../libraries/lcd.hh"
 #include "../snake/cherry_bitmap.h"
-#include "lowrisc_logo.h"
+#include "lowrisc_logo_dark.h"
 
 using namespace sonata::lcd;
 
@@ -27,7 +27,7 @@ void __cheri_compartment("lcd_test") lcd_test()
 
 	// Draw the lowRISC logo to the LCD
 	auto logoRect = screen.centered_subrect({105, 80});
-	lcd.draw_image_rgb565(logoRect, lowriscLogo105x80);
+	lcd.draw_image_rgb565(logoRect, lowriscLogoDark105x80);
 
 	// // Make a version of the cherry bitmap with a white background.
 	// uint8_t cherryImage10x10WhiteBg[200];
