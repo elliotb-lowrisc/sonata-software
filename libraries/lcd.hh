@@ -18,10 +18,18 @@ namespace sonata::lcd
 #include "../third_party/display_drivers/core/lucida_console_12pt.h"
 #include "../third_party/display_drivers/core/m3x6_16pt.h"
 #include "../third_party/display_drivers/st7735/lcd_st7735.h"
+#include "../third_party/display_drivers/core/lcd_base.h"
 		}
-		void __cheri_libcall lcd_init(LCD_Interface *, St7735Context *);
+		void __cheri_libcall lcd_init(LCD_Interface *, St7735Context *, LCD_Orientation);
 		void __cheri_libcall lcd_destroy(LCD_Interface *, St7735Context *);
 	} // namespace internal
+
+
+	struct Size
+	{
+		uint32_t width;
+		uint32_t height;
+	};
 
 	struct Point
 	{
@@ -29,15 +37,15 @@ namespace sonata::lcd
 		uint32_t y;
 
 		static const Point ORIGIN;
+
+		static Point offset(Point base, Size offset)
+		{
+			return {base.x + offset.width,
+			        base.y + offset.height};
+		}
 	};
 
 	inline constexpr const Point Point::ORIGIN{0, 0};
-
-	struct Size
-	{
-		uint32_t width;
-		uint32_t height;
-	};
 
 	struct Rect
 	{
@@ -91,9 +99,9 @@ namespace sonata::lcd
 		internal::St7735Context ctx;
 
 		public:
-		SonataLcd()
+		SonataLcd(internal::LCD_Orientation rot = internal::LCD_Rotate180)
 		{
-			internal::lcd_init(&lcdIntf, &ctx);
+			internal::lcd_init(&lcdIntf, &ctx, rot);
 		}
 
 		Size resolution()

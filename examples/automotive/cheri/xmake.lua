@@ -5,11 +5,11 @@
 compartment("automotive_send")
     add_deps("lcd", "debug")
     add_files(
-        "../lib/automotive_common.c", 
-        "../lib/automotive_menu.c", 
-        "../lib/no_pedal.c", 
-        "../lib/joystick_pedal.c", 
-        "../lib/digital_pedal.c", 
+        "../lib/automotive_common.c",
+        "../lib/automotive_menu.c",
+        "../lib/no_pedal.c",
+        "../lib/joystick_pedal.c",
+        "../lib/digital_pedal.c",
         "../lib/analogue_pedal.c"
     )
     add_files("send.cc")

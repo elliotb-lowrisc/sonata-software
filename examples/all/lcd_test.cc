@@ -11,15 +11,16 @@
 using namespace sonata::lcd;
 
 // Positions to draw messages on the screen
-static constexpr Point TopMessagePos       = {12, 8};
-static constexpr Point BottomMessagePos    = {38, 114};
+static constexpr Point TopMessagePos       = {24, 8};
+static constexpr Size  TopMessageOffset    = {2, 12};
+static constexpr Point BottomMessagePos    = {24, 136};
 static constexpr Size  BottomMessageOffset = {77, 0};
 
 /// Thread entry point.
 void __cheri_compartment("lcd_test") lcd_test()
 {
 	// Initialise the LCD
-	auto lcd    = SonataLcd();
+	auto lcd    = SonataLcd(sonata::lcd::internal::LCD_Rotate90);
 	auto screen = Rect::from_point_and_size(Point::ORIGIN, lcd.resolution());
 
 	// Draw the lowRISC logo to the LCD
@@ -45,7 +46,12 @@ void __cheri_compartment("lcd_test") lcd_test()
 
 	// Draw the messages & cherry image to the LCD
 	lcd.draw_str(TopMessagePos,
-	             "Running on Sonata!",
+	             "Running on",
+	             Color::White,
+	             Color::Black,
+	             Font::LucidaConsole_10pt);
+	lcd.draw_str(Point::offset(TopMessagePos, TopMessageOffset),
+	             "Sonata XL!",
 	             Color::White,
 	             Color::Black,
 	             Font::LucidaConsole_10pt);
@@ -54,8 +60,7 @@ void __cheri_compartment("lcd_test") lcd_test()
 	             Color::White,
 	             Color::Black,
 	             Font::M3x6_16pt);
-	Point imgPos = {BottomMessagePos.x + BottomMessageOffset.width,
-	                BottomMessagePos.y + BottomMessageOffset.height};
+	Point imgPos = Point::offset(BottomMessagePos, BottomMessageOffset);
 	lcd.draw_image_rgb565(Rect::from_point_and_size(imgPos, {10, 10}), img);
 
 	while (true)

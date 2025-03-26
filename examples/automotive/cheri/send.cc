@@ -487,72 +487,76 @@ __attribute__((
  */
 void __cheri_compartment("automotive_send") entry()
 {
-	// Initialise the LCD driver and calculate display information
-	lcd               = new SonataLcd();
-	Size  displaySize = lcd->resolution();
-	Point centre      = {displaySize.width / 2, displaySize.height / 2};
-	lcd->clean(BACKGROUND_COLOR);
+	// // Initialise the LCD driver and calculate display information
+	// lcd               = new SonataLcd();
+	// Size  displaySize = lcd->resolution();
+	// Point centre      = {displaySize.width / 2, displaySize.height / 2};
+	// lcd->clean(BACKGROUND_COLOR);
 
-	// Initialise Ethernet driver for use via callback
-	ethernet = new EthernetDevice();
-	ethernet->mac_address_set();
+	// // Initialise Ethernet driver for use via callback
+	// ethernet = new EthernetDevice();
+	// ethernet->mac_address_set();
 
-	// Wait until a good physical ethernet link to start the demo
-	if (!ethernet->phy_link_status())
-	{
-		Debug::log("Waiting for a good physical ethernet link...\n");
-		const Point WaitingStrPos[2] = {
-		  {centre.x - 55, centre.y - 5},
-		  {centre.x - 30, centre.y + 5},
-		};
-		lcd->draw_str(WaitingStrPos[0],
-		              "Waiting for a good physical",
-		              BACKGROUND_COLOR,
-		              TEXT_COLOUR);
-		lcd->draw_str(
-		  WaitingStrPos[1], "ethernet link...", BACKGROUND_COLOR, TEXT_COLOUR);
-	}
-	while (!ethernet->phy_link_status())
-	{
-		thread_millisecond_wait(50);
-	}
+	// // Wait until a good physical ethernet link to start the demo
+	// if (!ethernet->phy_link_status())
+	// {
+	// 	Debug::log("Waiting for a good physical ethernet link...\n");
+	// 	const Point WaitingStrPos[2] = {
+	// 	  {centre.x - 55, centre.y - 5},
+	// 	  {centre.x - 30, centre.y + 5},
+	// 	};
+	// 	lcd->draw_str(WaitingStrPos[0],
+	// 	              "Waiting for a good physical",
+	// 	              BACKGROUND_COLOR,
+	// 	              TEXT_COLOUR);
+	// 	lcd->draw_str(
+	// 	  WaitingStrPos[1], "ethernet link...", BACKGROUND_COLOR, TEXT_COLOUR);
+	// }
+	// while (!ethernet->phy_link_status())
+	// {
+	// 	thread_millisecond_wait(50);
+	// }
 
-	// Wait an additional 0.25 s to give the receiving board time to setup.
-	thread_millisecond_wait(250);
+	// // Wait an additional 0.25 s to give the receiving board time to setup.
+	// thread_millisecond_wait(250);
 
 	// Initialise the ADC driver for use via callback
 	SonataAdc::ClockDivider adcClockDivider =
 	  (CPU_TIMER_HZ / SonataAdc::MinClockFrequencyHz) / 2;
 	adc = new SonataAdc(adcClockDivider, SonataAdc::PowerDownMode::None);
 
-	// Adapt the common automotive library for CHERIoT drivers
-	constexpr uint32_t CyclesPerMillisecond = CPU_TIMER_HZ / 1000;
-	init_lcd(displaySize.width, displaySize.height);
-	init_callbacks({
-	  .uart_send           = write_to_uart,
-	  .wait                = wait,
-	  .waitTime            = 120 * CyclesPerMillisecond,
-	  .time                = rdcycle64,
-	  .loop                = lcd_display_cheri_message,
-	  .start               = reset_error_seen_and_shown,
-	  .joystick_read       = read_joystick,
-	  .digital_pedal_read  = read_pedal_digital,
-	  .analogue_pedal_read = read_pedal_analogue,
-	  .ethernet_transmit   = send_ethernet_frame,
-	  .lcd =
-	    {
-	      .draw_str        = lcd_draw_str,
-	      .clean           = lcd_clean,
-	      .fill_rect       = lcd_fill_rect,
-	      .draw_img_rgb565 = lcd_draw_img,
-	    },
-	});
+	// // Adapt the common automotive library for CHERIoT drivers
+	// constexpr uint32_t CyclesPerMillisecond = CPU_TIMER_HZ / 1000;
+	// init_lcd(displaySize.width, displaySize.height);
+	// init_callbacks({
+	//   .uart_send           = write_to_uart,
+	//   .wait                = wait,
+	//   .waitTime            = 120 * CyclesPerMillisecond,
+	//   .time                = rdcycle64,
+	//   .loop                = lcd_display_cheri_message,
+	//   .start               = reset_error_seen_and_shown,
+	//   .joystick_read       = read_joystick,
+	//   .digital_pedal_read  = read_pedal_digital,
+	//   .analogue_pedal_read = read_pedal_analogue,
+	//   .ethernet_transmit   = send_ethernet_frame,
+	//   .lcd =
+	//     {
+	//       .draw_str        = lcd_draw_str,
+	//       .clean           = lcd_clean,
+	//       .fill_rect       = lcd_fill_rect,
+	//       .draw_img_rgb565 = lcd_draw_img,
+	//     },
+	// });
 
-	// Begin the main demo loop
-	main_demo_loop();
+	// // Begin the main demo loop
+	// main_demo_loop();
+
+	while (true) {
+		read_pedal_analogue();
+	}
 
 	// Driver cleanup
-	delete lcd;
-	delete ethernet;
+	// delete lcd;
+	// delete ethernet;
 	delete adc;
 }
