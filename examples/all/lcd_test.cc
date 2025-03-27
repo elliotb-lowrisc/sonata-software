@@ -11,8 +11,8 @@
 using namespace sonata::lcd;
 
 // Positions to draw messages on the screen
-static constexpr Point TopMessagePos       = {24, 8};
-static constexpr Size  TopMessageOffset    = {2, 12};
+static constexpr Point TopMessagePos       = {24, 6};
+static constexpr Size  TopMessageOffset    = {2, 14};
 static constexpr Point BottomMessagePos    = {24, 136};
 static constexpr Size  BottomMessageOffset = {77, 0};
 
